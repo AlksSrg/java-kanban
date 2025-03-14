@@ -1,7 +1,4 @@
-package kanban.src.tools;
-
-import kanban.src.interfaceOfManagers.HistoryManager;
-import kanban.src.interfaceOfManagers.TaskManager;
+package kanban.src.managers;
 
 public class Managers {
 

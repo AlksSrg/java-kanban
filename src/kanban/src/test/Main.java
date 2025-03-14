@@ -1,17 +1,16 @@
 package kanban.src.test;
 
 
+import kanban.src.managers.InMemoryTaskManager;
 import kanban.src.tasks.EpicTask;
 import kanban.src.tasks.SubTask;
 import kanban.src.tasks.Task;
-import kanban.src.tools.InMemoryTaskManager;
 import kanban.src.tools.TaskStatus;
 
+import java.util.List;
 
-import java.util.ArrayList;
 
-
-public class Main { // Тесты
+public class Main { // Общие проверки работы приложения
 
     public static void main(String[] args) {
         InMemoryTaskManager manager = new InMemoryTaskManager();
@@ -77,19 +76,19 @@ public class Main { // Тесты
 
         //Проверка внесенных Task'ов
         System.out.println("Все Task:");
-        ArrayList<Task> allTasks = manager.getAllTasks();
+        List<Task> allTasks = manager.getAllTasks();
         for (int i = 0; i < allTasks.size(); i++) {
             System.out.println("Внесен Task № " + (i + 1) + " " + allTasks.get(i));
         }
 
         System.out.println("Все SubTask:");
-        ArrayList<SubTask> allSubtasks = manager.getAllSubTasks();
+        List<SubTask> allSubtasks = manager.getAllSubTasks();
         for (int i = 0; i < allSubtasks.size(); i++) {
             System.out.println("Внесен SubTask № " + (i + 1) + " " + allSubtasks.get(i));
         }
 
         System.out.println("Все EpicTask:");
-        ArrayList<EpicTask> allEpics = manager.getAllEpics();
+        List<EpicTask> allEpics = manager.getAllEpics();
         for (int i = 0; i < allEpics.size(); i++) {
             System.out.println("Внесен EpicTask № " + (i + 1) + " " + allEpics.get(i));
         }

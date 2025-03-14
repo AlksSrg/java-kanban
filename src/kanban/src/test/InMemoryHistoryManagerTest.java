@@ -1,7 +1,7 @@
 package kanban.src.test;
 
 import kanban.src.tasks.Task;
-import kanban.src.tools.InMemoryHistoryManager;
+import kanban.src.managers.InMemoryHistoryManager;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
-class InMemoryHistoryManagerTest {
+class InMemoryHistoryManagerTest {//тесты класса HistoryManager
 
     protected InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 

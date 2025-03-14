@@ -3,21 +3,22 @@ package kanban.src.tasks;
 import kanban.src.tools.TaskStatus;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EpicTask extends Task {
 
-    private ArrayList<Integer> subTaskId;
+    private List<Integer> subTaskId;
 
     public EpicTask(String taskName, String tasksInfo, TaskStatus status) {
         super(taskName, tasksInfo, status);
         this.subTaskId = new ArrayList<>();
     }
 
-    public ArrayList<Integer> getSubTaskId() {
+    public List<Integer> getSubTaskId() {
         return subTaskId;
     }
 
-    public ArrayList<Integer> setSubTaskId(ArrayList<Integer> subTaskId) {
+    public List<Integer> setSubTaskId(ArrayList<Integer> subTaskId) {
         return this.subTaskId = subTaskId;
     }
 
