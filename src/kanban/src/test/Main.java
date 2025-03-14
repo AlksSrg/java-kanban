@@ -1,10 +1,12 @@
-package kanban.src;
+package kanban.src.test;
 
-import kanban.src.Tasks.EpicTask;
-import kanban.src.Tasks.SubTask;
-import kanban.src.Tasks.Task;
-import kanban.src.Tools.TaskManager;
-import kanban.src.Tools.TaskStatus;
+
+import kanban.src.tasks.EpicTask;
+import kanban.src.tasks.SubTask;
+import kanban.src.tasks.Task;
+import kanban.src.tools.InMemoryTaskManager;
+import kanban.src.tools.TaskStatus;
+
 
 import java.util.ArrayList;
 
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 public class Main { // Тесты
 
     public static void main(String[] args) {
-        TaskManager manager = new TaskManager();
+        InMemoryTaskManager manager = new InMemoryTaskManager();
 
         // тест-комплект:
         // 3 обычные Task
@@ -81,7 +83,7 @@ public class Main { // Тесты
         }
 
         System.out.println("Все SubTask:");
-        ArrayList<SubTask> allSubtasks = manager.getAllSubtasks();
+        ArrayList<SubTask> allSubtasks = manager.getAllSubTasks();
         for (int i = 0; i < allSubtasks.size(); i++) {
             System.out.println("Внесен SubTask № " + (i + 1) + " " + allSubtasks.get(i));
         }
@@ -94,14 +96,14 @@ public class Main { // Тесты
 
 
         // проверка на получение Tasks
-        System.out.println("Получение Tasks по идентификатору " + manager.getTask(1));
-        System.out.println("Получение SubTasks по идентификатору " + manager.getTask(2));
-        System.out.println("Получение EpicTasks по идентификатору " + manager.getEpicById(3));
+        System.out.println("Получение Tasks по идентификатору " + manager.getTaskById(1));
+        System.out.println("Получение SubTasks по идентификатору " + manager.getSubTaskById(5));
+        System.out.println("Получение EpicTasks по идентификатору " + manager.getEpicById(4));
 
 
-        //проверка удаления разных Tasks
+//        проверка удаления разных Tasks
         manager.deleteTask(task1.getTaskId());
-        System.out.println("Task №1 " + manager.getTask(task1.getTaskId()));
+        System.out.println("Task №1 " + manager.getTaskById(task1.getTaskId()));
 
         manager.deleteEpicTask(epic1.getTaskId());
         System.out.println("EpicTask №1 " + manager.getEpicById(epic1.getTaskId()));
@@ -114,8 +116,6 @@ public class Main { // Тесты
         subtask1.setStatus(TaskStatus.DONE);
         manager.updateSubTask(subtask1);
         System.out.println("Статус SubTask № 1 " + subtask1.getStatus());
-
-
 
 
     }
