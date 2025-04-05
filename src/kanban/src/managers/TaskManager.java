@@ -6,7 +6,7 @@ import kanban.src.tasks.Task;
 
 import java.util.List;
 
-public interface TaskManager {//общий вид методов класса TaskManager
+public interface TaskManager { //общий вид методов класса TaskManager
 
     void saveEpicTask(EpicTask epic);//сохранение задачи типа Epic
 
