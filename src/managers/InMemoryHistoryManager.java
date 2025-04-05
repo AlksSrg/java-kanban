@@ -10,7 +10,6 @@ public class InMemoryHistoryManager implements HistoryManager { //реализа
     private Map<Integer, Node<Task>> history = new HashMap<>();
     private Node<Task> head;
     private Node<Task> tail;
-    protected TaskManager taskManager;
 
     @Override
     public void add(Task task) {
