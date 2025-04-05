@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TaskTest {
 
-    private final Task task = new Task("Task 1", "Task 1 info", NEW);
+    final Task task = new Task("Task 1", "Task 1 info", NEW);
 
 
     @Test
