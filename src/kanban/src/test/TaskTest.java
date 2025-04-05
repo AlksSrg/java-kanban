@@ -32,3 +32,4 @@ class TaskTest {
         assertEquals(testTask, task, "Задачи совпадают.");
 
     }
+}
