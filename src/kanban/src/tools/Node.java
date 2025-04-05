@@ -1,8 +1,6 @@
 package kanban.src.tools;
 
 
-
-
 public class Node<T> {
     private T task;
     private Node<T> next;
