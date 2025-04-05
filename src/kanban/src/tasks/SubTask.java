@@ -4,7 +4,7 @@ import kanban.src.tools.TaskStatus;
 
 public class SubTask extends Task {
 
-    private int epicTaskId ;
+    private int epicTaskId;
 
     public SubTask(int epicTaskId, String taskName, String tasksInfo, TaskStatus status) {
         super(taskName, tasksInfo, status);
