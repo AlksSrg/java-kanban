@@ -1,5 +1,6 @@
 package kanban.src.test;
 
+import kanban.src.managers.InMemoryTaskManager;
 import kanban.src.tasks.Task;
 import kanban.src.managers.InMemoryHistoryManager;
 import org.junit.jupiter.api.Test;
@@ -14,32 +15,43 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class InMemoryHistoryManagerTest {//тесты класса HistoryManager
 
     protected InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
+    protected InMemoryTaskManager manager = new InMemoryTaskManager();
 
-    private final Task task = new Task("Task 1", "Task 1 info", NEW);
+    private final Task task1 = new Task("Task 1", "Task 1 info", NEW);
+    private final Task task2 = new Task("Task 2", "Task 2 info", NEW);
+    private final Task task3 = new Task("Task 3", "Task 3 info", NEW);
 
     @Test
     void addHistory() { // проверка на добавление в историю просмотров
-        historyManager.add(task);
+        historyManager.add(task1);
+        historyManager.add(task2);
+        historyManager.add(task3);
         final List<Task> history = historyManager.getHistory();
         assertNotNull(history, "История пустая.");
         assertEquals(1, history.size(), "История не пустая.");
     }
 
     @Test
-    void addHistory11() {// проверка на добавление в историю одиннадцатого просмотра
-        for (int i = 0; i < 10; i++) {
-            historyManager.add(task);
-        }
+    void getHistory() {// Проверка на получение истории просмотров
+        historyManager.add(task1);
+        historyManager.add(task2);
+        historyManager.add(task3);
         final List<Task> history = historyManager.getHistory();
-        assertEquals(10, history.size(), "В истории не 10 значений.");
-        historyManager.add(task);
-        assertEquals(10, history.size(), "В истории не 10 значений.");
+        assertNotNull(history, "История пустая");
     }
 
     @Test
-    void getHistory() {
+    void remove() {//Удаление истории по ID задачи
+        manager.saveTask(task1);
+        manager.saveTask(task2);
+        manager.saveTask(task3);
+        historyManager.add(task1);
+        historyManager.add(task2);
+        historyManager.add(task3);
+        historyManager.remove(task1.getTaskId());
         final List<Task> history = historyManager.getHistory();
-        historyManager.add(task);
-        assertNotNull(history, "История пустая");
+        assertEquals(3, history.size(), "Просмотр удален");
+
     }
+
 }

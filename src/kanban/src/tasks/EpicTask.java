@@ -1,7 +1,6 @@
 package kanban.src.tasks;
 
 import kanban.src.tools.TaskStatus;
-
 import java.util.ArrayList;
 import java.util.List;
 
