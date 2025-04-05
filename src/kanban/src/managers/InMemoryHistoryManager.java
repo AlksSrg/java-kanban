@@ -6,7 +6,7 @@ import kanban.src.tools.Node;
 import java.util.*;
 
 
-public class InMemoryHistoryManager implements HistoryManager {//реализация методов HistoryManager
+public class InMemoryHistoryManager implements HistoryManager { //реализация методов HistoryManager
     private Map<Integer, Node<Task>> history = new HashMap<>();
     private Node<Task> head;
     private Node<Task> tail;
@@ -21,12 +21,12 @@ public class InMemoryHistoryManager implements HistoryManager {//реализа�
 
 
     @Override
-    public List<Task> getHistory() {//Просмотр содержимого истории просмотров
+    public List<Task> getHistory() { //Просмотр содержимого истории просмотров
         return getTasksHistory();
     }
 
     @Override
-    public void remove(Integer id) {//удаление истории
+    public void remove(Integer id) { //удаление истории
         history.remove(id);
     }
 
