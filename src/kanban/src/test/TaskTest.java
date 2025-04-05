@@ -1,5 +1,3 @@
-package kanban.src.test;
-
 import kanban.src.tasks.Task;
 import org.junit.jupiter.api.Test;
 
@@ -34,4 +32,3 @@ class TaskTest {
         assertEquals(testTask, task, "Задачи совпадают.");
 
     }
-}

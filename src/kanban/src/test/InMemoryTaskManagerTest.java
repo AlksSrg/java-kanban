@@ -1,5 +1,3 @@
-package kanban.src.test;
-
 import kanban.src.managers.InMemoryTaskManager;
 import kanban.src.tasks.EpicTask;
 import kanban.src.tasks.SubTask;
@@ -10,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 
 public class InMemoryTaskManagerTest { //тесты класса TaskManager
     protected InMemoryTaskManager manager = new InMemoryTaskManager();
