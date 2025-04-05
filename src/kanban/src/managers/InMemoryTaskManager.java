@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class InMemoryTaskManager implements TaskManager {//реализация методов класса TaskManager
+public class InMemoryTaskManager implements TaskManager { //реализация методов класса TaskManager
     protected Map<Integer, Task> tasks;
     protected Map<Integer, EpicTask> epicTasks;
     protected Map<Integer, SubTask> subTasks;
@@ -27,13 +27,13 @@ public class InMemoryTaskManager implements TaskManager {//реализация 
 
 
     @Override
-    public void saveEpicTask(EpicTask epic) {//сохранение задачи типа Epic
+    public void saveEpicTask(EpicTask epic) { //сохранение задачи типа Epic
         epic.setTaskId(generateTaskId());
         epicTasks.put(epic.getTaskId(), epic);
     }
 
     @Override
-    public void deleteEpicTask(int id) {//удаление задачи типа Epic
+    public void deleteEpicTask(int id) { //удаление задачи типа Epic
         EpicTask epic = epicTasks.remove(id);
         if (epic != null) {
             for (int subtaskId : epic.getSubTaskId()) {
@@ -43,7 +43,7 @@ public class InMemoryTaskManager implements TaskManager {//реализация 
     }
 
     @Override
-    public void updateEpicTask(EpicTask epic) {//обновление задачи типа Epic
+    public void updateEpicTask(EpicTask epic) { //обновление задачи типа Epic
         if (epicTasks.containsKey(epic.getSubTaskId())) {
             epicTasks.put(epic.getTaskId(), epic);
             updateEpicTaskStatus(epic);
@@ -51,7 +51,7 @@ public class InMemoryTaskManager implements TaskManager {//реализация 
     }
 
     @Override
-    public EpicTask getEpicById(int id) {//получение задачи типа Epic по ее Id
+    public EpicTask getEpicById(int id) { //получение задачи типа Epic по ее Id
         EpicTask epic = epicTasks.get(id);
         historyManager.add(epic);
         return epic;
@@ -59,12 +59,12 @@ public class InMemoryTaskManager implements TaskManager {//реализация 
 
 
     @Override
-    public List<EpicTask> getAllEpics() {//получение всех задач типа Epic
+    public List<EpicTask> getAllEpics() { //получение всех задач типа Epic
         return new ArrayList<>(epicTasks.values());
     }
 
     @Override
-    public void saveSubTask(SubTask subtask) {//сохранение задачи типа SubTask
+    public void saveSubTask(SubTask subtask) { //сохранение задачи типа SubTask
         subtask.setTaskId(generateTaskId());
         subTasks.put(subtask.getTaskId(), subtask);
         EpicTask epic = epicTasks.get(subtask.getEpicTaskId());
@@ -75,7 +75,7 @@ public class InMemoryTaskManager implements TaskManager {//реализация 
     }
 
     @Override
-    public void deleteSubTask(int id) {//удаление задачи типа Epic
+    public void deleteSubTask(int id) { //удаление задачи типа Epic
         SubTask subtask = subTasks.remove(id);
         if (subtask != null) {
             EpicTask epic = epicTasks.get(subtask.getEpicTaskId());
@@ -87,7 +87,7 @@ public class InMemoryTaskManager implements TaskManager {//реализация 
     }
 
     @Override
-    public List<SubTask> getSubTasksByEpicId(int epicId) {//получение задачи типа SubTasks по Id ее Epic
+    public List<SubTask> getSubTasksByEpicId(int epicId) { //получение задачи типа SubTasks по Id ее Epic
         List<SubTask> result = new ArrayList<>();
         EpicTask epic = epicTasks.get(epicId);
         if (epic != null) {
@@ -102,14 +102,14 @@ public class InMemoryTaskManager implements TaskManager {//реализация 
     }
 
     @Override
-    public SubTask getSubTaskById(int id) {//получение задачи типа SubTasks по ее Id
+    public SubTask getSubTaskById(int id) { //получение задачи типа SubTasks по ее Id
         SubTask subtask = subTasks.get(id);
         historyManager.add(subtask);
         return subtask;
     }
 
     @Override
-    public void updateSubTask(SubTask subtask) {//обновление задачи типа SubTasks
+    public void updateSubTask(SubTask subtask) { //обновление задачи типа SubTasks
         if (subTasks.containsKey(subtask.getTaskId())) {
             subTasks.put(subtask.getTaskId(), subtask);
             EpicTask epic = epicTasks.get(subtask.getEpicTaskId());
@@ -120,33 +120,33 @@ public class InMemoryTaskManager implements TaskManager {//реализация 
     }
 
     @Override
-    public List<SubTask> getAllSubTasks() {//получение всех задач типа SubTask
+    public List<SubTask> getAllSubTasks() { //получение всех задач типа SubTask
         return new ArrayList<>(subTasks.values());
     }
 
     @Override
-    public void saveTask(Task task) {// сохранение задачи типа Task
+    public void saveTask(Task task) { // сохранение задачи типа Task
         task.setTaskId(generateTaskId());
         tasks.put(task.getTaskId(), task);
     }
 
     @Override
-    public void deleteTask(int id) {// удаление задачи типа Task
+    public void deleteTask(int id) { // удаление задачи типа Task
         tasks.remove(id);
     }
 
     @Override
-    public List<Task> getAllTasks() {//получение всех задач типа Task
+    public List<Task> getAllTasks() { //получение всех задач типа Task
         return new ArrayList<>(tasks.values());
     }
 
     @Override
-    public void updateTask(Task task) {//обновление задачи типа Task
+    public void updateTask(Task task) { //обновление задачи типа Task
         tasks.put(task.getTaskId(), task);
     }
 
     @Override
-    public Task getTaskById(int id) {//получение задачи типа Tasks по ее Id
+    public Task getTaskById(int id) { //получение задачи типа Tasks по ее Id
         Task task = tasks.get(id);
         historyManager.add(task);
         return task;
@@ -154,16 +154,16 @@ public class InMemoryTaskManager implements TaskManager {//реализация 
 
 
     @Override
-    public List<Task> getHistory() {//получение истории просмотров
+    public List<Task> getHistory() { //получение истории просмотров
         return historyManager.getHistory();
     }
 
-    private int generateTaskId() {// генерация уникально Id для всех типов задач
+    private int generateTaskId() { // генерация уникально Id для всех типов задач
         return tasksId++;
 
     }
 
-    private void updateEpicTaskStatus(EpicTask epic) {//обновление статуса задачи типа Epic при обновлении/изменении статуса ее задач типа SubTask
+    private void updateEpicTaskStatus(EpicTask epic) { //обновление статуса задачи типа Epic при обновлении/изменении статуса ее задач типа SubTask
         if (epic.getSubTaskId().isEmpty()) {
             epic.setStatus(TaskStatus.NEW);
             return;
