@@ -1,8 +1,8 @@
-import kanban.src.tasks.Task;
+import tasks.Task;
 import org.junit.jupiter.api.Test;
 
-import static kanban.src.tools.TaskStatus.DONE;
-import static kanban.src.tools.TaskStatus.NEW;
+import static tools.TaskStatus.DONE;
+import static tools.TaskStatus.NEW;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TaskTest {

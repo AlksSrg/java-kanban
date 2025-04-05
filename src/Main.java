@@ -1,8 +1,8 @@
-import kanban.src.managers.InMemoryTaskManager;
-import kanban.src.tasks.EpicTask;
-import kanban.src.tasks.SubTask;
-import kanban.src.tasks.Task;
-import kanban.src.tools.TaskStatus;
+import managers.InMemoryTaskManager;
+import tasks.EpicTask;
+import tasks.SubTask;
+import tasks.Task;
+import tools.TaskStatus;
 
 import java.util.List;
 

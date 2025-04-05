@@ -1,9 +1,9 @@
-package kanban.src.managers;
+package managers;
 
-import kanban.src.tasks.EpicTask;
-import kanban.src.tasks.SubTask;
-import kanban.src.tasks.Task;
-import kanban.src.tools.TaskStatus;
+import tasks.EpicTask;
+import tasks.SubTask;
+import tasks.Task;
+import tools.TaskStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;

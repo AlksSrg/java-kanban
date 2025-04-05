@@ -1,6 +1,6 @@
-package kanban.src.tasks;
+package tasks;
 
-import kanban.src.tools.TaskStatus;
+import tools.TaskStatus;
 
 public class SubTask extends Task {
 

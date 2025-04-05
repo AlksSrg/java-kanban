@@ -1,7 +1,7 @@
-package kanban.src.managers;
+package managers;
 
-import kanban.src.tasks.Task;
-import kanban.src.tools.Node;
+import tasks.Task;
+import tools.Node;
 
 import java.util.*;
 

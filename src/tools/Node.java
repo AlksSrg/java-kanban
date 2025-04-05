@@ -1,4 +1,4 @@
-package kanban.src.tools;
+package tools;
 
 
 public class Node<T> {
