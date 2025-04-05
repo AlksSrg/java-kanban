@@ -100,7 +100,7 @@ public class Main { // Общие проверки работы приложен
         System.out.println("Получение EpicTasks по идентификатору " + manager.getEpicById(4));
 
 
-//        проверка удаления разных Tasks
+        //проверка удаления разных Tasks
         manager.deleteTask(task1.getTaskId());
         System.out.println("Task №1 " + manager.getTaskById(task1.getTaskId()));
 

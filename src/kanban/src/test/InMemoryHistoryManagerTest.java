@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
-class InMemoryHistoryManagerTest {//тесты класса HistoryManager
+class InMemoryHistoryManagerTest { //тесты класса HistoryManager
 
     protected InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
     protected InMemoryTaskManager manager = new InMemoryTaskManager();
@@ -32,7 +32,7 @@ class InMemoryHistoryManagerTest {//тесты класса HistoryManager
     }
 
     @Test
-    void getHistory() {// Проверка на получение истории просмотров
+    void getHistory() { // Проверка на получение истории просмотров
         historyManager.add(task1);
         historyManager.add(task2);
         historyManager.add(task3);
@@ -41,7 +41,7 @@ class InMemoryHistoryManagerTest {//тесты класса HistoryManager
     }
 
     @Test
-    void remove() {//Удаление истории по ID задачи
+    void remove() { //Удаление истории по ID задачи
         manager.saveTask(task1);
         manager.saveTask(task2);
         manager.saveTask(task3);

@@ -13,14 +13,14 @@ class TaskTest {
 
 
     @Test
-    void setTaskName() {// проверка на изменение имени в Task
+    void setTaskName() { // проверка на изменение имени в Task
         Task testTask = task;
         task.setTaskName("New Task1");
         assertEquals(testTask, task, "Задачи совпадают.");
     }
 
     @Test
-    void setTasksInfo() {// проверка на изменение описания в Task
+    void setTasksInfo() { // проверка на изменение описания в Task
         Task testTask = task;
         task.setTasksInfo("New Task1 info");
         assertEquals(testTask, task, "Задачи совпадают.");
@@ -28,7 +28,7 @@ class TaskTest {
 
 
     @Test
-    void setStatus() {
+    void setStatus() { // проверка на изменение статуса в Task
         Task testTask = task;
         task.setStatus(DONE);
         assertEquals(testTask, task, "Задачи совпадают.");
