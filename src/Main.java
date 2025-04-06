@@ -1,11 +1,8 @@
-package kanban.src.test;
-
-
-import kanban.src.managers.InMemoryTaskManager;
-import kanban.src.tasks.EpicTask;
-import kanban.src.tasks.SubTask;
-import kanban.src.tasks.Task;
-import kanban.src.tools.TaskStatus;
+import managers.InMemoryTaskManager;
+import tasks.EpicTask;
+import tasks.SubTask;
+import tasks.Task;
+import tools.TaskStatus;
 
 import java.util.List;
 
@@ -100,7 +97,7 @@ public class Main { // Общие проверки работы приложен
         System.out.println("Получение EpicTasks по идентификатору " + manager.getEpicById(4));
 
 
-//        проверка удаления разных Tasks
+        //проверка удаления разных Tasks
         manager.deleteTask(task1.getTaskId());
         System.out.println("Task №1 " + manager.getTaskById(task1.getTaskId()));
 

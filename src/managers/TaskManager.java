@@ -1,12 +1,13 @@
-package kanban.src.managers;
+package managers;
 
-import kanban.src.tasks.EpicTask;
-import kanban.src.tasks.SubTask;
-import kanban.src.tasks.Task;
+import tasks.EpicTask;
+import tasks.SubTask;
+import tasks.Task;
 
 import java.util.List;
 
-public interface TaskManager {//общий вид методов класса TaskManager
+public interface TaskManager { //общий вид методов класса TaskManager
+
     void saveEpicTask(EpicTask epic);//сохранение задачи типа Epic
 
     void deleteEpicTask(int id);//удаление задачи типа Epic

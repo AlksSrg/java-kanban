@@ -1,4 +1,4 @@
-package kanban.src.tools;
+package tools;
 
 public enum TaskStatus {
     NEW,

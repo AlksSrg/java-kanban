@@ -1,22 +1,19 @@
-package kanban.src.test;
-
-import kanban.src.managers.InMemoryTaskManager;
-import kanban.src.tasks.EpicTask;
-import kanban.src.tasks.SubTask;
-import kanban.src.tasks.Task;
-import kanban.src.tools.TaskStatus;
+import managers.InMemoryTaskManager;
+import tasks.EpicTask;
+import tasks.SubTask;
+import tasks.Task;
+import tools.TaskStatus;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-public class InMemoryTaskManagerTest {//тесты класса TaskManager
+public class InMemoryTaskManagerTest { //тесты класса TaskManager
     protected InMemoryTaskManager manager = new InMemoryTaskManager();
 
     @Test
-    void saveTask_shouldCreateATask() {//проверка на создание Task и совпадение исходного таска и полученного по Id
+    void saveTask_shouldCreateATask() { //проверка на создание Task и совпадение исходного таска и полученного по Id
         final Task task = new Task("Task 1", "Task 1 info", TaskStatus.NEW);
         manager.saveTask(task);
         final List<Task> savedTask = manager.getAllTasks();
@@ -28,7 +25,7 @@ public class InMemoryTaskManagerTest {//тесты класса TaskManager
     }
 
     @Test
-    void saveEpicTask_shouldCreateATask() {//проверка на создание EpicTask и совпадение исходного таска и полученного по Id
+    void saveEpicTask_shouldCreateATask() { //проверка на создание EpicTask и совпадение исходного таска и полученного по Id
         final EpicTask epic = new EpicTask("Epic 1", "Epic 1 info", TaskStatus.NEW);
         manager.saveEpicTask(epic);
         final List<EpicTask> savedTask = manager.getAllEpics();
@@ -40,7 +37,7 @@ public class InMemoryTaskManagerTest {//тесты класса TaskManager
     }
 
     @Test
-    void saveSubTask_shouldCreateATask() {//проверка на создание SubTask и совпадение исходного таска и полученного по Id
+    void saveSubTask_shouldCreateATask() { //проверка на создание SubTask и совпадение исходного таска и полученного по Id
         final EpicTask epic = new EpicTask("Epic 1", "Epic 1 info", TaskStatus.NEW);
         manager.saveEpicTask(epic);
         final SubTask subTask = new SubTask(epic.getTaskId(), "Subtask 1", "SubTask 1 info",
@@ -55,7 +52,7 @@ public class InMemoryTaskManagerTest {//тесты класса TaskManager
     }
 
     @Test
-    void deleteEpicTask_shouldDeleteEpicTaskDeleteAndHisSubTask() {//Проверка на удаление Epic'а и принадлежащих ему SubTask'ов
+    void deleteEpicTask_shouldDeleteEpicTaskDeleteAndHisSubTask() { //Проверка на удаление Epic'а и принадлежащих ему SubTask'ов
         final EpicTask epic = new EpicTask("Epic 1", "Epic 1 info", TaskStatus.NEW);
         final SubTask subTask = new SubTask(epic.getTaskId(), "Subtask 1", "SubTask 1 info",
                 TaskStatus.NEW);
@@ -70,7 +67,7 @@ public class InMemoryTaskManagerTest {//тесты класса TaskManager
     }
 
     @Test
-    void updateEpicTaskStatus_shouldUpdateStatusEpicShiftsStatusSubTask() {//Проверка на смену статуса у Epic после смены статуса у его SubTask
+    void updateEpicTaskStatus_shouldUpdateStatusEpicShiftsStatusSubTask() { //Проверка на смену статуса у Epic после смены статуса у его SubTask
         final EpicTask epic = new EpicTask("Epic 1", "Epic 1 info", TaskStatus.NEW);
         manager.saveEpicTask(epic);
         final SubTask subTask = new SubTask(epic.getTaskId(), "Subtask 1", "SubTask 1 info", TaskStatus.NEW);
