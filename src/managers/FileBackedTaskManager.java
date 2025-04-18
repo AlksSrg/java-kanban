@@ -107,7 +107,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String taskInfo = null;
         int epicTaskId = 0;
         String[] elements = content.split(",");
-        if (elements[1] == null){
+        if (elements[1] == null) {
             return null;
         }
         if (elements[1].equals("EPIC")) {
