@@ -1,17 +1,32 @@
 package tasks;
 
 import tools.TaskStatus;
+import tools.Type;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EpicTask extends Task {
 
-    private List<Integer> subTaskId;
+    private List<Integer> subTaskId = new ArrayList<>();
+    private final Type type;
 
     public EpicTask(String taskName, String tasksInfo, TaskStatus status) {
         super(taskName, tasksInfo, status);
         this.subTaskId = new ArrayList<>();
+        this.type = Type.EPIC;
+    }
+
+    public EpicTask(ArrayList<Integer> subTaskId,
+                    int id, String taskName,
+                    String tasksInfo, TaskStatus status) {
+        super(id, taskName, tasksInfo, status);
+        this.subTaskId = subTaskId;;
+        this.type = Type.EPIC;
+    }
+
+    public Type getType() {
+        return type;
     }
 
     public List<Integer> getSubTaskId() {
@@ -37,5 +52,11 @@ public class EpicTask extends Task {
                 + " Описание: " + getTasksInfo()
                 + " Статус: " + getStatus()
                 + " SubTasks = " + subTaskId + "}";
+    }
+
+    @Override
+    public String toStringFromFile() {
+        return String.format("%s,%s,%s,%s,%s,%s", getTaskId(), getType(), getTaskName(),
+                getStatus(), getTasksInfo(), subTaskId);
     }
 }

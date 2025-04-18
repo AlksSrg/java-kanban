@@ -8,13 +8,12 @@ import tools.TaskStatus;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class InMemoryTaskManager implements TaskManager { //реализация методов класса TaskManager
-    protected Map<Integer, Task> tasks;
-    protected Map<Integer, EpicTask> epicTasks;
-    protected Map<Integer, SubTask> subTasks;
+    private final HashMap<Integer, Task> tasks;
+    private final HashMap<Integer, EpicTask> epicTasks;
+    private final HashMap<Integer, SubTask> subTasks;
     protected HistoryManager historyManager;
     protected int tasksId = 1;
 
@@ -57,6 +56,14 @@ public class InMemoryTaskManager implements TaskManager { //реализация
         return epic;
     }
 
+    @Override
+    public HashMap<Integer, EpicTask> getEpicTask() {
+        if (!epicTasks.isEmpty()) {
+            return epicTasks;
+        } else {
+            return new HashMap<>();
+        }
+    }
 
     @Override
     public List<EpicTask> getAllEpics() { //получение всех задач типа Epic
@@ -125,6 +132,15 @@ public class InMemoryTaskManager implements TaskManager { //реализация
     }
 
     @Override
+    public HashMap<Integer, SubTask> getSubTasks() { // получение списка всех подзадач
+        if (!subTasks.isEmpty()) {
+            return subTasks;
+        } else {
+            return new HashMap<>();
+        }
+    }
+
+    @Override
     public void saveTask(Task task) { // сохранение задачи типа Task
         task.setTaskId(generateTaskId());
         tasks.put(task.getTaskId(), task);
@@ -152,7 +168,6 @@ public class InMemoryTaskManager implements TaskManager { //реализация
         return task;
     }
 
-
     @Override
     public List<Task> getHistory() { //получение истории просмотров
         return historyManager.getHistory();
@@ -161,6 +176,15 @@ public class InMemoryTaskManager implements TaskManager { //реализация
     private int generateTaskId() { // генерация уникально Id для всех типов задач
         return tasksId++;
 
+    }
+
+    @Override
+    public HashMap<Integer, Task> getTasks() {
+        if (!tasks.isEmpty()) {
+            return tasks;
+        } else {
+            return new HashMap<>();
+        }
     }
 
     private void updateEpicTaskStatus(EpicTask epic) { //обновление статуса задачи типа Epic при обновлении/изменении статуса ее задач типа SubTask
