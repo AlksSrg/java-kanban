@@ -8,12 +8,13 @@ import tools.TaskStatus;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class InMemoryTaskManager implements TaskManager { //реализация методов класса TaskManager
-    private final HashMap<Integer, Task> tasks;
-    private final HashMap<Integer, EpicTask> epicTasks;
-    private final HashMap<Integer, SubTask> subTasks;
+    private final Map<Integer, Task> tasks;
+    private final Map<Integer, EpicTask> epicTasks;
+    private final Map<Integer, SubTask> subTasks;
     protected HistoryManager historyManager;
     protected int tasksId = 1;
 
@@ -23,7 +24,6 @@ public class InMemoryTaskManager implements TaskManager { //реализация
         this.epicTasks = new HashMap<>();
         this.subTasks = new HashMap<>();
     }
-
 
     @Override
     public void saveEpicTask(EpicTask epic) { //сохранение задачи типа Epic
@@ -57,7 +57,7 @@ public class InMemoryTaskManager implements TaskManager { //реализация
     }
 
     @Override
-    public HashMap<Integer, EpicTask> getEpicTask() {
+    public Map<Integer, EpicTask> getEpicTask() {
         if (!epicTasks.isEmpty()) {
             return epicTasks;
         } else {
@@ -132,7 +132,7 @@ public class InMemoryTaskManager implements TaskManager { //реализация
     }
 
     @Override
-    public HashMap<Integer, SubTask> getSubTasks() { // получение списка всех подзадач
+    public Map<Integer, SubTask> getSubTasks() { // получение списка всех подзадач
         if (!subTasks.isEmpty()) {
             return subTasks;
         } else {
@@ -179,7 +179,7 @@ public class InMemoryTaskManager implements TaskManager { //реализация
     }
 
     @Override
-    public HashMap<Integer, Task> getTasks() {
+    public Map<Integer, Task> getTasks() {
         if (!tasks.isEmpty()) {
             return tasks;
         } else {

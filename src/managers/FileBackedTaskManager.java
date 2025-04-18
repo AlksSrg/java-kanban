@@ -14,11 +14,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.io.*;
 import java.util.List;
+import java.util.Map;
 
 
 import static tools.Type.*;
 
-public class FileBackedTaskManager extends InMemoryTaskManager {
+public class FileBackedTaskManager extends InMemoryTaskManager { //логика работы и сохранения/воспроизведения из файла с ПК с задачами
 
     private final File file;
 
@@ -68,22 +69,49 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
-    private void save() {
+    public static FileBackedTaskManager loadFromFile(File file) { // загрузка внесенных тасок из файла в программу
+        FileBackedTaskManager fm = new FileBackedTaskManager(file);
+        try {
+            List<String> fileTasks = Files.readAllLines(file.toPath());
+
+            for (int i = 1; i < fileTasks.size(); i++) {
+                String line = fileTasks.get(i);
+
+                if (fromString(line).getType() == EPIC) {
+                    EpicTask epic = (EpicTask) fromString(line);
+                    fm.saveEpicTask(epic);
+                }
+                if (fromString(line).getType() == SUBTASK) {
+                    SubTask subTask = (SubTask) fromString(line);
+                    fm.saveSubTask(subTask);
+                }
+                if (fromString(line).getType() == TASK) {
+                    Task task = fromString(line);
+                    fm.saveTask(task);
+                }
+            }
+        } catch (IOException exception) {
+            throw new ManagerSaveException("Произошла ошибка во время чтения файла.");
+        }
+        return fm;
+    }
+
+    private void save() { //метод для сохранения тасок в файл на пк
         try (Writer writer = new FileWriter(file)) {
             writer.write("id,type,name,status,info\n");
-            HashMap<Integer, String> allTasks = new HashMap<>();
+            Map<Integer, String> allTasks = new HashMap<>();
 
-            HashMap<Integer, Task> tasks = super.getTasks();
+            Map<Integer, Task> tasks = super.getTasks();
             for (Integer id : tasks.keySet()) {
                 allTasks.put(id, tasks.get(id).toStringFromFile());
             }
 
-            HashMap<Integer, EpicTask> epics = super.getEpicTask();
+            Map<Integer, EpicTask> epics = super.getEpicTask();
             for (Integer id : epics.keySet()) {
                 allTasks.put(id, epics.get(id).toStringFromFile());
             }
 
-            HashMap<Integer, SubTask> subtasks = super.getSubTasks();
+            Map<Integer, SubTask> subtasks = super.getSubTasks();
             for (Integer id : subtasks.keySet()) {
                 allTasks.put(id, subtasks.get(id).toStringFromFile());
             }
@@ -97,7 +125,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    private static Task fromString(String content) {
+    private static Task fromString(String content) { //метод для получения из строки конечной таски
         Task task = new Task();
         List<Integer> listOfSubTasksIds = new ArrayList<>();
         int id = 0;
@@ -133,31 +161,5 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return task;
     }
 
-
-    public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager fm = new FileBackedTaskManager(file);
-        try {
-            ArrayList<String> fileTasks = (ArrayList<String>) Files.readAllLines(file.toPath());
-
-            for (int i = 1; i < fileTasks.size(); i++) {
-                String line = fileTasks.get(i);
-
-                if (fromString(line).getType() == EPIC) {
-                    EpicTask epic = (EpicTask) fromString(line);
-                    fm.saveEpicTask(epic);
-                }
-                if (fromString(line).getType() == SUBTASK) {
-                    SubTask subTask = (SubTask) fromString(line);
-                    fm.saveSubTask(subTask);
-                }
-                if (fromString(line).getType() == TASK) {
-                    Task task = fromString(line);
-                    fm.saveTask(task);
-                }
-            }
-        } catch (IOException exception) {
-            throw new ManagerSaveException("Произошла ошибка во время чтения файла.");
-        }
-        return fm;
-    }
 }
+

@@ -17,11 +17,11 @@ public class EpicTask extends Task {
         this.type = Type.EPIC;
     }
 
-    public EpicTask(ArrayList<Integer> subTaskId,
+    public EpicTask(List<Integer> subTaskId,
                     int id, String taskName,
                     String tasksInfo, TaskStatus status) {
         super(id, taskName, tasksInfo, status);
-        this.subTaskId = subTaskId;;
+        this.subTaskId = subTaskId;
         this.type = Type.EPIC;
     }
 
@@ -33,7 +33,7 @@ public class EpicTask extends Task {
         return subTaskId;
     }
 
-    public List<Integer> setSubTaskId(ArrayList<Integer> subTaskId) {
+    public List<Integer> setSubTaskId(List<Integer> subTaskId) {
         return this.subTaskId = subTaskId;
     }
 

@@ -10,6 +10,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -82,9 +83,9 @@ class FileBackedTaskManagerTest {
         fileManager.saveTask(task);
         fileManager.saveEpicTask(epic);
         fileManager.loadFromFile(tempFile);
-        HashMap<Integer, Task> mapOfTasks = fileManager.getTasks();
+        Map<Integer, Task> mapOfTasks = fileManager.getTasks();
         List<Task> listOfTasks = new ArrayList<>(mapOfTasks.values());
-        HashMap<Integer, EpicTask> mapOfEpics = fileManager.getEpicTask();
+        Map<Integer, EpicTask> mapOfEpics = fileManager.getEpicTask();
         List<EpicTask> listOfEpics = new ArrayList<>(mapOfEpics.values());
         assertEquals(List.of(task), listOfTasks);
         assertEquals(List.of(epic), listOfEpics);
