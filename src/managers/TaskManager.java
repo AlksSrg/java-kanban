@@ -6,7 +6,6 @@ import tasks.Task;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public interface TaskManager { //общий вид методов класса TaskManager
 
