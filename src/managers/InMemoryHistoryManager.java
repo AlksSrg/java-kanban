@@ -18,7 +18,6 @@ public class InMemoryHistoryManager implements HistoryManager { //реализа
         }
     }
 
-
     @Override
     public List<Task> getHistory() { //Просмотр содержимого истории просмотров
         return getTasksHistory();
