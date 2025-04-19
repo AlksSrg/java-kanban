@@ -5,7 +5,6 @@ import tasks.SubTask;
 import tasks.Task;
 
 import java.util.List;
-import java.util.Map;
 
 public interface TaskManager { //общий вид методов класса TaskManager
 
@@ -16,8 +15,6 @@ public interface TaskManager { //общий вид методов класса T
     void updateEpicTask(EpicTask epic);//обновление задачи типа Epic
 
     EpicTask getEpicById(int id);//получение задачи типа Epic по ее Id
-
-//    Map<Integer, EpicTask> getEpicTask();
 
     List<EpicTask> getAllEpics();//получение всех задач типа Epic
 
@@ -33,8 +30,6 @@ public interface TaskManager { //общий вид методов класса T
 
     List<SubTask> getAllSubTasks();//получение всех задач типа SubTask
 
-//    Map<Integer, SubTask> getSubTasks();
-
     void saveTask(Task task);// сохранение задачи типа Task
 
     void deleteTask(int id);// удаление задачи типа Task
@@ -46,7 +41,5 @@ public interface TaskManager { //общий вид методов класса T
     Task getTaskById(int id);//получение задачи типа Tasks по ее Id
 
     List<Task> getHistory();//получение истории просмотров
-
-//    Map<Integer, Task> getTasks();
 
 }
