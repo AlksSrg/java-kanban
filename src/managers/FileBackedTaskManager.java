@@ -101,18 +101,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager { //логика 
             writer.write("id,type,name,status,info\n");
             Map<Integer, String> allTasks = new HashMap<>();
 
-            Map<Integer, Task> tasksFile = super.tasks;
+            Map<Integer, Task> tasksFile = tasks;
 
             for (Integer id : tasksFile.keySet()) {
                 allTasks.put(id, tasksFile.get(id).toStringFromFile());
             }
 
-            Map<Integer, EpicTask> epicsFile = super.epicTasks;
+            Map<Integer, EpicTask> epicsFile = epicTasks;
             for (Integer id : epicsFile.keySet()) {
                 allTasks.put(id, epicsFile.get(id).toStringFromFile());
             }
 
-            Map<Integer, SubTask> subtasksFile = super.subTasks;
+            Map<Integer, SubTask> subtasksFile = subTasks;
             for (Integer id : subtasksFile.keySet()) {
                 allTasks.put(id, subtasksFile.get(id).toStringFromFile());
             }
