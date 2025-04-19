@@ -83,10 +83,8 @@ class FileBackedTaskManagerTest {
         fileManager.saveTask(task);
         fileManager.saveEpicTask(epic);
         fileManager.loadFromFile(tempFile);
-        Map<Integer, Task> mapOfTasks = fileManager.getTasks();
-        List<Task> listOfTasks = new ArrayList<>(mapOfTasks.values());
-        Map<Integer, EpicTask> mapOfEpics = fileManager.getEpicTask();
-        List<EpicTask> listOfEpics = new ArrayList<>(mapOfEpics.values());
+        List<Task> listOfTasks = fileManager.getAllTasks();
+        List<EpicTask> listOfEpics = fileManager.getAllEpics();
         assertEquals(List.of(task), listOfTasks);
         assertEquals(List.of(epic), listOfEpics);
     }

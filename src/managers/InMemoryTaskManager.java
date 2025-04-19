@@ -12,9 +12,9 @@ import java.util.Map;
 
 
 public class InMemoryTaskManager implements TaskManager { //реализация методов класса TaskManager
-    private final Map<Integer, Task> tasks;
-    private final Map<Integer, EpicTask> epicTasks;
-    private final Map<Integer, SubTask> subTasks;
+    protected Map<Integer, Task> tasks;
+    protected Map<Integer, EpicTask> epicTasks;
+    protected Map<Integer, SubTask> subTasks;
     protected HistoryManager historyManager;
     protected int tasksId = 1;
 
@@ -56,14 +56,14 @@ public class InMemoryTaskManager implements TaskManager { //реализация
         return epic;
     }
 
-    @Override
-    public Map<Integer, EpicTask> getEpicTask() {
-        if (!epicTasks.isEmpty()) {
-            return epicTasks;
-        } else {
-            return new HashMap<>();
-        }
-    }
+//    @Override
+//    public Map<Integer, EpicTask> getEpicTask() {
+//        if (!epicTasks.isEmpty()) {
+//            return epicTasks;
+//        } else {
+//            return new HashMap<>();
+//        }
+//    }
 
     @Override
     public List<EpicTask> getAllEpics() { //получение всех задач типа Epic
@@ -131,14 +131,14 @@ public class InMemoryTaskManager implements TaskManager { //реализация
         return new ArrayList<>(subTasks.values());
     }
 
-    @Override
-    public Map<Integer, SubTask> getSubTasks() { // получение списка всех подзадач
-        if (!subTasks.isEmpty()) {
-            return subTasks;
-        } else {
-            return new HashMap<>();
-        }
-    }
+//    @Override
+//    public Map<Integer, SubTask> getSubTasks() { // получение списка всех подзадач
+//        if (!subTasks.isEmpty()) {
+//            return subTasks;
+//        } else {
+//            return new HashMap<>();
+//        }
+//    }
 
     @Override
     public void saveTask(Task task) { // сохранение задачи типа Task
@@ -178,14 +178,14 @@ public class InMemoryTaskManager implements TaskManager { //реализация
 
     }
 
-    @Override
-    public Map<Integer, Task> getTasks() {
-        if (!tasks.isEmpty()) {
-            return tasks;
-        } else {
-            return new HashMap<>();
-        }
-    }
+//    @Override
+//    public Map<Integer, Task> getTasks() {
+//        if (!tasks.isEmpty()) {
+//            return tasks;
+//        } else {
+//            return new HashMap<>();
+//        }
+//    }
 
     private void updateEpicTaskStatus(EpicTask epic) { //обновление статуса задачи типа Epic при обновлении/изменении статуса ее задач типа SubTask
         if (epic.getSubTaskId().isEmpty()) {

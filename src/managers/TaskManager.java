@@ -17,7 +17,7 @@ public interface TaskManager { //общий вид методов класса T
 
     EpicTask getEpicById(int id);//получение задачи типа Epic по ее Id
 
-    Map<Integer, EpicTask> getEpicTask();
+//    Map<Integer, EpicTask> getEpicTask();
 
     List<EpicTask> getAllEpics();//получение всех задач типа Epic
 
@@ -33,7 +33,7 @@ public interface TaskManager { //общий вид методов класса T
 
     List<SubTask> getAllSubTasks();//получение всех задач типа SubTask
 
-    Map<Integer, SubTask> getSubTasks();
+//    Map<Integer, SubTask> getSubTasks();
 
     void saveTask(Task task);// сохранение задачи типа Task
 
@@ -47,6 +47,6 @@ public interface TaskManager { //общий вид методов класса T
 
     List<Task> getHistory();//получение истории просмотров
 
-    Map<Integer, Task> getTasks();
+//    Map<Integer, Task> getTasks();
 
 }
