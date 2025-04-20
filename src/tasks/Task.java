@@ -1,6 +1,7 @@
 package tasks;
 
 import tools.TaskStatus;
+import tools.Type;
 
 public class Task {
 
@@ -8,11 +9,36 @@ public class Task {
     private String taskName;
     private int taskId;
     private TaskStatus status;
+    private Type type;
 
     public Task(String taskName, String tasksInfo, TaskStatus status) {
         this.taskName = taskName;
         this.tasksInfo = tasksInfo;
         this.status = status;
+        this.type = Type.TASK;
+    }
+
+    public Task(int taskId, String taskName, String tasksInfo, TaskStatus status) {
+        this.taskId = taskId;
+        this.taskName = taskName;
+        this.tasksInfo = tasksInfo;
+        this.status = status;
+        this.type = Type.TASK;
+    }
+
+    public Task(String taskName, String tasksInfo, Integer taskId, TaskStatus status) {
+        this.taskName = taskName;
+        this.tasksInfo = tasksInfo;
+        this.taskId = taskId;
+        this.status = status;
+        this.type = Type.TASK;
+    }
+
+    public Task() {
+    }
+
+    public Type getType() {
+        return type;
     }
 
     public int getTaskId() {
@@ -68,4 +94,8 @@ public class Task {
         return taskId == task.taskId;
     }
 
+    public String toStringFromFile() {
+        return String.format("%s,%s,%s,%s,%s",
+                taskId, type, taskName, status, tasksInfo);
+    }
 }

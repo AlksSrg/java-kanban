@@ -25,7 +25,6 @@ public class InMemoryTaskManager implements TaskManager { //реализация
         this.subTasks = new HashMap<>();
     }
 
-
     @Override
     public void saveEpicTask(EpicTask epic) { //сохранение задачи типа Epic
         epic.setTaskId(generateTaskId());
@@ -56,7 +55,6 @@ public class InMemoryTaskManager implements TaskManager { //реализация
         historyManager.add(epic);
         return epic;
     }
-
 
     @Override
     public List<EpicTask> getAllEpics() { //получение всех задач типа Epic
@@ -151,7 +149,6 @@ public class InMemoryTaskManager implements TaskManager { //реализация
         historyManager.add(task);
         return task;
     }
-
 
     @Override
     public List<Task> getHistory() { //получение истории просмотров
