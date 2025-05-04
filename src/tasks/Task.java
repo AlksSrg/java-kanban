@@ -3,6 +3,10 @@ package tasks;
 import tools.TaskStatus;
 import tools.Type;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Task {
 
     private String tasksInfo;
@@ -10,31 +14,18 @@ public class Task {
     private int taskId;
     private TaskStatus status;
     private Type type;
+    private Duration duration;
+    private LocalDateTime startTime;
+    public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
 
-    public Task(String taskName, String tasksInfo, TaskStatus status) {
-        this.taskName = taskName;
-        this.tasksInfo = tasksInfo;
-        this.status = status;
-        this.type = Type.TASK;
-    }
-
-    public Task(int taskId, String taskName, String tasksInfo, TaskStatus status) {
+    public Task(int taskId, String taskName, String tasksInfo, TaskStatus status, Type type, Duration duration, LocalDateTime startTime) {
         this.taskId = taskId;
         this.taskName = taskName;
         this.tasksInfo = tasksInfo;
         this.status = status;
-        this.type = Type.TASK;
-    }
-
-    public Task(String taskName, String tasksInfo, Integer taskId, TaskStatus status) {
-        this.taskName = taskName;
-        this.tasksInfo = tasksInfo;
-        this.taskId = taskId;
-        this.status = status;
-        this.type = Type.TASK;
-    }
-
-    public Task() {
+        this.type = type;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public Type getType() {
@@ -73,12 +64,29 @@ public class Task {
         this.status = status;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
+    }
+
     @Override
     public String toString() {
-        return "Task { Идентификатор: " + taskId
-                + " Задача: " + taskName
-                + " Описание: " + tasksInfo
-                + " Статус: " + status + "}";
+        String breakLine = "\n";
+        return "Тип задачи - Task" + breakLine
+                + "Идентификатор: " + taskId + breakLine
+                + "Задача: " + taskName + breakLine
+                + "Описание: " + tasksInfo + breakLine
+                + "Статус: " + status + breakLine
+                + "Старт задачи: " + startTime + breakLine
+                + "Продолжительность задачи:" + duration.toMinutes() + breakLine;
+
     }
 
     @Override
@@ -95,7 +103,13 @@ public class Task {
     }
 
     public String toStringFromFile() {
-        return String.format("%s,%s,%s,%s,%s",
-                taskId, type, taskName, status, tasksInfo);
+        return String.format("%d,%s,%s,%s,%s,%s,%s",
+                taskId,                   // Идентификатор
+                type.name(),              // Тип задачи
+                status.name(),            // Статус задачи
+                taskName,                 // Название задачи
+                tasksInfo,                // Описание задачи
+                startTime.format(dateTimeFormatter), // Время старта
+                duration.toString());      // Продолжительность
     }
 }

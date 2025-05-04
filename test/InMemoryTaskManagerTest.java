@@ -1,83 +1,245 @@
 import managers.InMemoryTaskManager;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import tasks.EpicTask;
 import tasks.SubTask;
 import tasks.Task;
 import tools.TaskStatus;
-import org.junit.jupiter.api.Test;
+import tools.TaskTimeException;
+import tools.Type;
 
+import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class InMemoryTaskManagerTest { //тесты класса TaskManager
-    protected InMemoryTaskManager manager = new InMemoryTaskManager();
 
-    @Test
-    void saveTask_shouldCreateATask() { //проверка на создание Task и совпадение исходного таска и полученного по Id
-        final Task task = new Task("Task 1", "Task 1 info", TaskStatus.NEW);
-        manager.saveTask(task);
-        final List<Task> savedTask = manager.getAllTasks();
-        assertNotNull(savedTask, "Задача не найдена.");
-        assertEquals(manager.getAllTasks(), savedTask, "Задачи не совпадают.");
-        assertNotNull(savedTask, "Задачи не возвращаются.");
-        assertEquals(1, savedTask.size(), "Неверное количество задач.");
-        assertEquals(task, savedTask.getFirst(), "Задачи не совпадают.");
+// Реализуем тесты для InMemoryTaskManager
+public class InMemoryTaskManagerTest extends ManagerTest<InMemoryTaskManager> {
+
+    @Override
+    @BeforeEach
+    public void createManagerForTest() throws IOException {
+        taskManager = new InMemoryTaskManager();
+        taskManager.clearData();
+        createTestTasks();
     }
 
+    // Проверяем создание задач разных типов
     @Test
-    void saveEpicTask_shouldCreateATask() { //проверка на создание EpicTask и совпадение исходного таска и полученного по Id
-        final EpicTask epic = new EpicTask("Epic 1", "Epic 1 info", TaskStatus.NEW);
-        manager.saveEpicTask(epic);
-        final List<EpicTask> savedTask = manager.getAllEpics();
-        assertNotNull(savedTask, "Задача не найдена.");
-        assertEquals(manager.getAllEpics(), savedTask, "Задачи не совпадают.");
-        assertNotNull(savedTask, "Задачи не возвращаются.");
-        assertEquals(1, savedTask.size(), "Неверное количество задач.");
-        assertEquals(epic, savedTask.getFirst(), "Задачи не совпадают.");
+    void testCreateTasks() {
+        assertNotNull(taskManager.getTaskById(testTask.getTaskId()), "Ошибка при создании простой задачи");
+        assertNotNull(taskManager.getEpicById(testEpicTask.getTaskId()), "Ошибка при создании эпика");
+        assertNotNull(taskManager.getSubTaskById(testSubTask1.getTaskId()), "Ошибка при создании подзадачи");
+        assertNotNull(taskManager.getSubTaskById(testSubTask2.getTaskId()), "Ошибка при создании подзадачи");
     }
 
+    //Тестируем удаление задач.
     @Test
-    void saveSubTask_shouldCreateATask() { //проверка на создание SubTask и совпадение исходного таска и полученного по Id
-        final EpicTask epic = new EpicTask("Epic 1", "Epic 1 info", TaskStatus.NEW);
-        manager.saveEpicTask(epic);
-        final SubTask subTask = new SubTask(epic.getTaskId(), "Subtask 1", "SubTask 1 info",
-                TaskStatus.NEW);
-        manager.saveSubTask(subTask);
-        final List<SubTask> savedTask = manager.getAllSubTasks();
-        assertNotNull(savedTask, "Задача не найдена.");
-        assertEquals(manager.getAllSubTasks(), savedTask, "Задачи не совпадают.");
-        assertNotNull(savedTask, "Задачи не возвращаются.");
-        assertEquals(1, savedTask.size(), "Неверное количество задач.");
-        assertEquals(subTask, savedTask.getFirst(), "Задачи не совпадают.");
+    void testRemoveTasks() {
+
+        // Удаляем каждую задачу
+        taskManager.deleteTask(testTask.getTaskId());
+        taskManager.deleteEpicTask(testEpicTask.getTaskId());
+        taskManager.deleteSubTask(testSubTask1.getTaskId());
+        taskManager.deleteSubTask(testSubTask2.getTaskId());
+
+        // Проверяем, что удалённых задач больше нет
+        assertNull(taskManager.getTaskById(testTask.getTaskId()), "Простая задача не была удалена");
+        assertNull(taskManager.getEpicById(testEpicTask.getTaskId()), "Эпик не был удалён");
+        assertNull(taskManager.getSubTaskById(testSubTask1.getTaskId()), "Подзадача не была удалена");
+        assertNull(taskManager.getSubTaskById(testSubTask2.getTaskId()), "Подзадача не была удалена");
     }
 
+    //Тестируем обновление задач.
     @Test
-    void deleteEpicTask_shouldDeleteEpicTaskDeleteAndHisSubTask() { //Проверка на удаление Epic'а и принадлежащих ему SubTask'ов
-        final EpicTask epic = new EpicTask("Epic 1", "Epic 1 info", TaskStatus.NEW);
-        final SubTask subTask = new SubTask(epic.getTaskId(), "Subtask 1", "SubTask 1 info",
-                TaskStatus.NEW);
-        manager.saveEpicTask(epic);
-        manager.saveSubTask(subTask);
-        assertNotNull(manager.getAllEpics(), "Задача не найдена.");
-        assertNotNull(manager.getAllSubTasks(), "Задача не найдена.");
-        manager.deleteEpicTask(epic.getTaskId());
-        System.out.println(manager.getAllEpics());
-        assertTrue(manager.getAllEpics().isEmpty());
-        assertTrue(manager.getSubTasksByEpicId(epic.getTaskId()).isEmpty());
+    void testUpdateTasks() {
+
+        // Меняем название
+        testTask.setTaskName("Новая простая задача");
+        testEpicTask.setTaskName("Новый эпик");
+        testSubTask1.setTaskName("Новое имя подзадачи");
+
+        // Обновляем задачи
+        taskManager.updateTask(testTask);
+        taskManager.updateEpicTask(testEpicTask);
+        taskManager.updateSubTask(testSubTask1);
+
+        // Проверяем изменения
+        assertEquals("Новая простая задача", taskManager.getTaskById(testTask.getTaskId()).getTaskName(),
+                "Название простой задачи не было обновлено");
+        assertEquals("Новый эпик", taskManager.getEpicById(testEpicTask.getTaskId()).getTaskName(),
+                "Название эпика не было обновлено");
+        assertEquals("Новое имя подзадачи", taskManager.getSubTaskById(testSubTask1.getTaskId()).getTaskName(),
+                "Название подзадачи не было обновлено");
     }
 
+    //Тестируем получение всех Tasks.
     @Test
-    void updateEpicTaskStatus_shouldUpdateStatusEpicShiftsStatusSubTask() { //Проверка на смену статуса у Epic после смены статуса у его SubTask
-        final EpicTask epic = new EpicTask("Epic 1", "Epic 1 info", TaskStatus.NEW);
-        manager.saveEpicTask(epic);
-        final SubTask subTask = new SubTask(epic.getTaskId(), "Subtask 1", "SubTask 1 info", TaskStatus.NEW);
-        manager.saveSubTask(subTask);
-        assertEquals(TaskStatus.NEW, epic.getStatus(), "Неверный статус.");
-
-        subTask.setStatus(TaskStatus.IN_PROGRESS);
-        manager.updateSubTask(subTask);
-        assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus(), "Неверный статус.");
-
+    void testGetAllTasks() {
+        List<Task> allTasks = taskManager.getAllTasks();
+        assertFalse(allTasks.isEmpty(), "Список всех задач должен быть непустым");
     }
 
+    //Тестируем получение всех Epics.
+    @Test
+    void testGetAllEpics() {
+        List<EpicTask> allEpics = taskManager.getAllEpics();
+        assertFalse(allEpics.isEmpty(), "Список всех эпиков должен быть непустым");
+    }
+
+    //Тестируем получение всех SubTasks.
+    @Test
+    void testGetAllSubTasks() {
+        List<SubTask> allSubTasks = taskManager.getAllSubTasks();
+        assertFalse(allSubTasks.isEmpty(), "Список всех подзадач должен быть непустым");
+    }
+
+    //Тестируем получение задач определенного типа по идентификатору.
+    @Test
+    void testGetSpecificTaskTypes() {
+        assertNotNull(taskManager.getTaskById(testTask.getTaskId()));
+        assertNotNull(taskManager.getEpicById(testEpicTask.getTaskId()));
+        assertNotNull(taskManager.getSubTaskById(testSubTask1.getTaskId()));
+        assertNotNull(taskManager.getSubTaskById(testSubTask2.getTaskId()));
+    }
+
+    //Тестиуем получение SubTask по Epic ID
+    @Test
+    void testGetSubTasksByEpicId() {
+
+        // Получаем подзадачи для нашего эпика
+        List<SubTask> subTasksForEpic = taskManager.getSubTasksByEpicId(testEpicTask.getTaskId());
+
+        // Проверяем, что подзадача вернулась
+        assertFalse(subTasksForEpic.isEmpty(), "Должна вернуться одна подзадача");
+        assertEquals(2, subTasksForEpic.size(), "Количество подзадач должно быть равно одному");
+        assertEquals(testSubTask1, subTasksForEpic.getFirst(), "Возвращаемая подзадача должна соответствовать сохранённой");
+    }
+
+    //Тестируем очистку хранилища задач.
+    @Test
+    void testClearData() {
+        taskManager.clearData();
+
+        // Проверяем, что хранилище пустое
+        assertTrue(taskManager.getAllTasks().isEmpty());
+        assertTrue(taskManager.getAllEpics().isEmpty());
+        assertTrue(taskManager.getAllSubTasks().isEmpty());
+    }
+
+    //Проверка на добавление пересекающихся по времени задач
+    @Test
+    void testAddTaskToSortedList() throws Exception {
+
+        // Штатные задачи из TaskManagerTest добавляются
+        assertEquals(4, taskManager.getPrioritizedTasks().size(), "Четыре задачи должны быть добавлены");
+
+        // пятая задача частично пересекается с первой задачей
+        LocalDateTime taskTime5Start = LocalDateTime.of(2025, 5, 4, 10, 30); // Начинается внутри первой задачи
+        Duration taskDuration5 = Duration.ofHours(1); // Продолжительность пятой задачи
+
+        Task fiveTask = new Task(
+                5, "Пятая задача", "Описание 5-ой задачи",
+                TaskStatus.NEW, Type.TASK,
+                taskDuration5, taskTime5Start
+        );
+
+        // Попытка добавить пятую задачу должна привести к ошибке
+        try {
+            taskManager.addTaskToSortedList(fiveTask);
+            fail("Исключение не произошло при пересечении задач");
+        } catch (TaskTimeException e) {
+            assertEquals("Пересечение задач по времени", e.getMessage(), "Сообщение исключения верное");
+        }
+
+        // шестая задача добавляется без пересечения
+        LocalDateTime taskTime6Start = LocalDateTime.of(2025, 5, 4, 12, 0); // Начинается после первой задачи
+        Duration taskDuration6 = Duration.ofHours(1); // Продолжительность шестая задачи
+
+        Task sixTask = new Task(
+                6, "Шестая задача", "Описание 6-ой задачи",
+                TaskStatus.NEW, Type.TASK,
+                taskDuration6, taskTime6Start
+        );
+        taskManager.addTaskToSortedList(sixTask);
+
+        // Проверяем, что шестая задача добавилась нормально
+        assertEquals(5, taskManager.getPrioritizedTasks().size(), "Всего должно быть 5 задач");
+    }
+
+    //Тестируем получение приоритизированного списка задач.
+    @Test
+    void testGetPrioritizedTasks() {
+        List<Task> prioritizedTasks = taskManager.getPrioritizedTasks();
+        assertFalse(prioritizedTasks.isEmpty(), "Список приоритетных задач должен быть непустым");
+    }
+
+    //Тестируем логику автоматического обновления статуса эпика.
+    @Test
+    void testAutoUpdatingEpicStatus() {
+        //меняем статус у SubTask
+        testSubTask1.setStatus(TaskStatus.DONE);
+        testSubTask2.setStatus(TaskStatus.DONE);
+        taskManager.updateSubTask(testSubTask1);
+        taskManager.updateSubTask(testSubTask2);
+
+        //Статус эпика должен стать IN_PROGRESS
+        assertEquals(TaskStatus.DONE, taskManager.getEpicById(testEpicTask.getTaskId()).getStatus(),
+                "Статус эпика должен быть DONE при выполнении подзадачи");
+    }
+
+    //Тестируем историю просмотров задач.
+    @Test
+    void testHistoryManager() {
+        // Просматриваем задачи
+        taskManager.getTaskById(testTask.getTaskId());
+        taskManager.getEpicById(testEpicTask.getTaskId());
+        taskManager.getSubTaskById(testSubTask1.getTaskId());
+
+        // Проверяем, что история записана верно
+        List<Task> history = taskManager.getHistory();
+        assertFalse(history.isEmpty(), "История просмотров должна быть непустой");
+    }
+
+    //Расчёт статуса Epic при граничных условия:
+    @Test
+    void testEpicStatusUpdateScenarios() {
+
+        // Случай: Все подзадачи NEW - создаются из TaskManagerTest со статусом NEW
+        assertEquals(TaskStatus.NEW, testEpicTask.getStatus(), "Эпик должен быть NEW, если все подзадачи NEW");
+
+        // Случай: Все подзадачи DONE
+        testSubTask1.setStatus(TaskStatus.DONE);
+        testSubTask2.setStatus(TaskStatus.DONE);
+        taskManager.updateSubTask(testSubTask1);
+        taskManager.updateSubTask(testSubTask2);
+
+        assertEquals(TaskStatus.DONE, testEpicTask.getStatus(), "Эпик должен быть DONE, если все подзадачи DONE");
+
+        // Случай: Смесь NEW и DONE -
+        testSubTask1.setStatus(TaskStatus.DONE);
+        testSubTask2.setStatus(TaskStatus.NEW);
+        taskManager.updateSubTask(testSubTask1);
+        taskManager.updateSubTask(testSubTask2);
+
+        assertEquals(TaskStatus.IN_PROGRESS, testEpicTask.getStatus(), "Эпик должен быть IN_PROGRESS, если есть подзадачи NEW и DONE");
+
+        // Случай: Одна из подзадач IN_PROGRESS
+        testSubTask1.setStatus(TaskStatus.IN_PROGRESS);
+        testSubTask2.setStatus(TaskStatus.NEW);
+        taskManager.updateSubTask(testSubTask1);
+        taskManager.updateSubTask(testSubTask2);
+
+        assertEquals(TaskStatus.IN_PROGRESS, testEpicTask.getStatus(), "Эпос должен быть IN_PROGRESS, если есть подзадача IN_PROGRESS");
+    }
+
+    //Завершаем тестирование, очищая среду.
+    @AfterEach
+    void teardown() {
+        taskManager.clearData();
+    }
 }
