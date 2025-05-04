@@ -107,7 +107,7 @@ public class InMemoryTaskManagerTest extends ManagerTest<InMemoryTaskManager> {
         assertNotNull(taskManager.getSubTaskById(testSubTask2.getTaskId()));
     }
 
-    //Тестиуем получение SubTask по Epic ID
+    //Тестируем получение SubTask по Epic ID
     @Test
     void testGetSubTasksByEpicId() {
 
@@ -135,40 +135,39 @@ public class InMemoryTaskManagerTest extends ManagerTest<InMemoryTaskManager> {
     @Test
     void testAddTaskToSortedList() throws Exception {
 
-        // Штатные задачи из TaskManagerTest добавляются
-        assertEquals(4, taskManager.getPrioritizedTasks().size(), "Четыре задачи должны быть добавлены");
+        // Штатные задачи из TaskManagerTest добавляются, кроме Epic
+        assertEquals(3, taskManager.getPrioritizedTasks().size(), "Три задачи должны быть добавлены");
 
-        // пятая задача частично пересекается с первой задачей
-        LocalDateTime taskTime5Start = LocalDateTime.of(2025, 5, 4, 10, 30); // Начинается внутри первой задачи
-        Duration taskDuration5 = Duration.ofHours(1); // Продолжительность пятой задачи
+        // Попытка добавить пересекающуюся задачу должна привести к ошибке
+        // Задача частично пересекается с первой задачей
+        LocalDateTime overlappingTaskTimeStart = LocalDateTime.of(2025, 5, 4, 10, 30); // Начинается внутри первой задачи
+        Duration overlappingTaskDuration = Duration.ofHours(1); // Продолжительность задачи
 
-        Task fiveTask = new Task(
-                5, "Пятая задача", "Описание 5-ой задачи",
+        Task overlappingTask = new Task(
+                5, "Пересекающаяся задача", "Описание задачи",
                 TaskStatus.NEW, Type.TASK,
-                taskDuration5, taskTime5Start
+                overlappingTaskDuration, overlappingTaskTimeStart
         );
-
-        // Попытка добавить пятую задачу должна привести к ошибке
         try {
-            taskManager.addTaskToSortedList(fiveTask);
+            taskManager.addTaskToSortedList(overlappingTask);
             fail("Исключение не произошло при пересечении задач");
         } catch (TaskTimeException e) {
             assertEquals("Пересечение задач по времени", e.getMessage(), "Сообщение исключения верное");
         }
 
-        // шестая задача добавляется без пересечения
-        LocalDateTime taskTime6Start = LocalDateTime.of(2025, 5, 4, 12, 0); // Начинается после первой задачи
-        Duration taskDuration6 = Duration.ofHours(1); // Продолжительность шестая задачи
+        // Добавление задачи без пересечения
+        LocalDateTime nonOverlappingTaskTimeStart = LocalDateTime.of(2025, 5, 4, 12, 0); // Начинается после первой задачи
+        Duration nonOverlappingTaskDuration = Duration.ofHours(1); // Продолжительность задачи
 
-        Task sixTask = new Task(
-                6, "Шестая задача", "Описание 6-ой задачи",
+        Task nonOverlappingTask = new Task(
+                6, "Не пересекающаяся задача", "Описание задачи",
                 TaskStatus.NEW, Type.TASK,
-                taskDuration6, taskTime6Start
+                nonOverlappingTaskDuration, nonOverlappingTaskTimeStart
         );
-        taskManager.addTaskToSortedList(sixTask);
+        taskManager.addTaskToSortedList(nonOverlappingTask);
 
-        // Проверяем, что шестая задача добавилась нормально
-        assertEquals(5, taskManager.getPrioritizedTasks().size(), "Всего должно быть 5 задач");
+        // Проверяем, что задача добавилась нормально
+        assertEquals(4, taskManager.getPrioritizedTasks().size(), "Всего должно быть 4 задачи");
     }
 
     //Тестируем получение приоритизированного списка задач.
