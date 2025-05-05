@@ -42,4 +42,5 @@ public interface TaskManager { //общий вид методов класса T
 
     List<Task> getHistory();//получение истории просмотров
 
+    void clearData();
 }

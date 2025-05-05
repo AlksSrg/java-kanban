@@ -7,19 +7,21 @@ import tools.ManagerSaveException;
 import tools.TaskStatus;
 import tools.Type;
 
+import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.io.*;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Stream;
 
+import static tasks.Task.dateTimeFormatter;
 
-import static tools.Type.*;
-
-public class FileBackedTaskManager extends InMemoryTaskManager { //логика работы и сохранения/воспроизведения из файла с ПК с задачами
+//логика работы и сохранения/воспроизведения из файла с ПК с задачами
+public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private final File file;
 
@@ -69,98 +71,86 @@ public class FileBackedTaskManager extends InMemoryTaskManager { //логика 
         save();
     }
 
-    public static FileBackedTaskManager loadFromFile(File file) { // загрузка внесенных тасок из файла в программу
+    // загрузка внесенных тасок из файла в программу
+    public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager fm = new FileBackedTaskManager(file);
-        try {
-            List<String> fileTasks = Files.readAllLines(file.toPath());
-
-            for (int i = 1; i < fileTasks.size(); i++) {
-                String line = fileTasks.get(i);
-
-                if (fromString(line).getType() == EPIC) {
-                    EpicTask epic = (EpicTask) fromString(line);
-                    fm.saveEpicTask(epic);
-                }
-                if (fromString(line).getType() == SUBTASK) {
-                    SubTask subTask = (SubTask) fromString(line);
-                    fm.saveSubTask(subTask);
-                }
-                if (fromString(line).getType() == TASK) {
-                    Task task = fromString(line);
-                    fm.saveTask(task);
-                }
-            }
-        } catch (IOException exception) {
-            throw new ManagerSaveException("Произошла ошибка во время чтения файла.");
+        try (Stream<String> stream = Files.lines(file.toPath())) {
+            stream.skip(1) // Пропускаем первую строку (заголовок)
+                    .map(FileBackedTaskManager::fromString)
+                    .forEach(task -> {
+                        if (task instanceof EpicTask) {
+                            fm.saveEpicTask((EpicTask) task);
+                        } else if (task instanceof SubTask) {
+                            fm.saveSubTask((SubTask) task);
+                        } else {
+                            fm.saveTask(task);
+                        }
+                    });
+        } catch (IOException ex) {
+            throw new ManagerSaveException("Ошибка при чтении файла.");
         }
         return fm;
     }
 
-    private void save() { //метод для сохранения тасок в файл на пк
+    //метод для сохранения тасок в файл на пк
+    private void save() {
         try (Writer writer = new FileWriter(file)) {
-            writer.write("id,type,name,status,info\n");
-            Map<Integer, String> allTasks = new HashMap<>();
-
-            Map<Integer, Task> tasksFile = tasks;
-
-            for (Integer id : tasksFile.keySet()) {
-                allTasks.put(id, tasksFile.get(id).toStringFromFile());
-            }
-
-            Map<Integer, EpicTask> epicsFile = epicTasks;
-            for (Integer id : epicsFile.keySet()) {
-                allTasks.put(id, epicsFile.get(id).toStringFromFile());
-            }
-
-            Map<Integer, SubTask> subtasksFile = subTasks;
-            for (Integer id : subtasksFile.keySet()) {
-                allTasks.put(id, subtasksFile.get(id).toStringFromFile());
-            }
-
-            for (String value : allTasks.values()) {
-                writer.write(String.format("%s\n", value));
-            }
-
-        } catch (IOException exception) {
-            throw new ManagerSaveException("Произошла ошибка во время чтения файла.");
+            writer.write("id,type,name,status,start_time,duration,end_time,subtask_ids\n");
+            tasks.values().stream()
+                    .map(Task::toStringFromFile)
+                    .forEachOrdered(line -> {
+                        try {
+                            writer.write(line + "\n");
+                        } catch (IOException e) {
+                            throw new ManagerSaveException("Ошибка при сохранении задач.");
+                        }
+                    });
+        } catch (IOException ex) {
+            throw new ManagerSaveException("Ошибка при сохранении задач.");
         }
     }
 
-    private static Task fromString(String content) { //метод для получения из строки конечной таски
-        Task task = new Task();
-        List<Integer> listOfSubTasksIds = new ArrayList<>();
-        int id = 0;
-        Type type = null;
-        String taskName = null;
-        TaskStatus status = null;
-        String taskInfo = null;
-        int epicTaskId = 0;
-        String[] elements = content.split(",");
-        if (elements[1] == null) {
-            return null;
-        }
-        if (elements[1].equals("EPIC")) {
-            listOfSubTasksIds = List.of(Integer.valueOf(elements[0]));
-        } else {
-            id = Integer.parseInt(elements[0]);
-            type = Type.valueOf(elements[1]);
-            taskName = String.valueOf(elements[2]);
-            status = TaskStatus.valueOf(elements[3]);
-            taskInfo = elements[4];
-            if (elements.length == 6) {
-                epicTaskId = Integer.parseInt(elements[5]);
-            }
-        }
+    private static Task fromString(String content) {
+        String[] fields = content.split(",", -1); // Оставляет пустые элементы, если есть лишние запятые
+        if (fields.length < 6) return null;       // Если что-то из пунктов не заполнено
 
-        if (type == EPIC) {
-            return new Task(id, taskName, taskInfo, status);
-        } else if (type == SUBTASK) {
-            return new SubTask(taskName, taskInfo, id, status, epicTaskId);
-        } else if (type == TASK) {
-            return new EpicTask((ArrayList<Integer>) listOfSubTasksIds, id, taskName, taskInfo, status);
+        int taskId = Integer.parseInt(fields[0]);          // ID задачи
+        Type type = Type.valueOf(fields[1]);               // Тип задачи
+        TaskStatus status = TaskStatus.valueOf(fields[2]); // Статус задачи
+        String taskName = fields[3];                       // Имя задачи
+        String tasksInfo = fields[4];                      // Дополнительная информация
+        LocalDateTime startTime = LocalDateTime.parse(fields[5], dateTimeFormatter); // Дата начала
+        Duration duration = Duration.parse(fields[6]);     // Длительность задачи
+
+        // Создаем конкретные объекты задач в зависимости от типа
+        switch (type) {
+            case TASK:
+                return new Task(taskId, taskName, tasksInfo, status, type, duration, startTime);
+
+            case EPIC:
+                LocalDateTime endTime = fields.length >= 8 && !fields[7].isBlank() ?
+                        LocalDateTime.parse(fields[7], dateTimeFormatter) :
+                        null;
+
+                List<Integer> subtaskIds = new ArrayList<>();
+                if (fields.length >= 9 && !fields[8].isBlank()) {
+                    String[] subtaskFields = fields[8].split(":");
+                    for (String subtaskField : subtaskFields) {
+                        if (!subtaskField.isBlank()) {
+                            subtaskIds.add(Integer.parseInt(subtaskField.trim()));
+                        }
+                    }
+                }
+
+                return new EpicTask(taskId, taskName, tasksInfo, status, type, duration, startTime, endTime, subtaskIds);
+
+            case SUBTASK:
+                int epicTaskId = fields.length >= 8 ? Integer.parseInt(fields[7]) : -1;
+                return new SubTask(taskId, taskName, tasksInfo, status, type, duration, startTime, epicTaskId);
+
+            default:
+                return null;
         }
-        return task;
     }
-
 }
 

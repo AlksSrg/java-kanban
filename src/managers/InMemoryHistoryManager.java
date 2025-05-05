@@ -4,6 +4,7 @@ import tasks.Task;
 import tools.Node;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class InMemoryHistoryManager implements HistoryManager { //реализация методов HistoryManager
@@ -29,13 +30,10 @@ public class InMemoryHistoryManager implements HistoryManager { //реализа
     }
 
     private List<Task> getTasksHistory() {
-        List<Task> tasks = new LinkedList<>();
-        Node<Task> currentNode = head;
-        while (currentNode != null) {
-            tasks.add(currentNode.getTask());
-            currentNode = currentNode.getNext();
-        }
-        return tasks;
+        return history.values().stream()
+                .sorted(Comparator.comparing(node -> node.getTask().getTaskId()))
+                .map(Node::getTask)
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     private Node<Task> linkLast(Task task) {
@@ -43,7 +41,7 @@ public class InMemoryHistoryManager implements HistoryManager { //реализа
             removeNode(history.get(task.getTaskId()));
         }
         final Node<Task> oldTail = tail;
-        final Node<Task> newTail = new Node<>(tail, task, null);
+        final Node<Task> newTail = new Node<>(oldTail, task, null);
         tail = newTail;
         history.put(task.getTaskId(), newTail);
         if (oldTail == null) {
