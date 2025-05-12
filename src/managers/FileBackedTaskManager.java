@@ -95,7 +95,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     //метод для сохранения тасок в файл на пк
     private void save() {
         try (Writer writer = new FileWriter(file)) {
-            writer.write("id,type,name,status,start_time,duration,end_time,subtask_ids\n");
+            writer.write("id,type,status,name,tasksInfo,start_time,duration,end_time,subtask_ids\n");
             tasks.values().stream()
                     .map(Task::toStringFromFile)
                     .forEachOrdered(line -> {
