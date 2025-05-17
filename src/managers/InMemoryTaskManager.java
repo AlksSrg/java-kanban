@@ -1,12 +1,13 @@
 package managers;
 
+import exceptions.TaskTimeException;
 import tasks.EpicTask;
 import tasks.SubTask;
 import tasks.Task;
 import tools.TaskStatus;
-import tools.TaskTimeException;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
@@ -42,7 +43,6 @@ public class InMemoryTaskManager implements TaskManager {
             for (int subtaskId : epic.getSubTaskId()) {
                 subTasks.remove(subtaskId);
             }
-            sortedTasks.remove(epic);
         }
     }
 
@@ -78,6 +78,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (epic != null) {
             epic.addSubTaskId(subtask.getTaskId());
             updateEpicTaskStatus(epic);
+            updateEpicTimeFrame(epic);
         }
         addTaskToSortedList(subtask);
     }
@@ -128,6 +129,7 @@ public class InMemoryTaskManager implements TaskManager {
             EpicTask epic = epicTasks.get(subtask.getEpicTaskId());
             if (epic != null) {
                 updateEpicTaskStatus(epic);
+                updateEpicTimeFrame(epic);
             }
             addTaskToSortedList(subtask);
         }
@@ -206,7 +208,6 @@ public class InMemoryTaskManager implements TaskManager {
         return prioritizedTasks;
     }
 
-
     // генерация уникально Id для всех типов задач
     private int generateTaskId() {
         return tasksId++;
@@ -273,5 +274,31 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
         return false; // Пересечения не найдены
+    }
+
+    // Обновление времени начала и окончания Epic-задачи на основании вложенных подзадач
+    private void updateEpicTimeFrame(EpicTask epic) {
+        LocalDateTime minStartTime = null;
+        LocalDateTime maxEndTime = null;
+
+        for (Integer subtaskId : epic.getSubTaskId()) {
+            SubTask subtask = subTasks.get(subtaskId);
+
+            if (subtask != null) {
+                LocalDateTime subtaskStartTime = subtask.getStartTime();
+                LocalDateTime subtaskEndTime = subtask.getEndTime();
+
+                if (minStartTime == null || subtaskStartTime.isBefore(minStartTime)) {
+                    minStartTime = subtaskStartTime;
+                }
+
+                if (maxEndTime == null || subtaskEndTime.isAfter(maxEndTime)) {
+                    maxEndTime = subtaskEndTime;
+                }
+            }
+        }
+
+        epic.setStartTime(minStartTime); // Начало Эпика — самая ранняя стартовая точка среди подзадач
+        epic.setEndTime(maxEndTime);     // Окончание Эпика — самая поздняя конечная точка среди подзадач
     }
 }

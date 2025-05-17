@@ -76,6 +76,18 @@ public class Task {
         return startTime.plus(duration);
     }
 
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
     @Override
     public String toString() {
         String breakLine = "\n";

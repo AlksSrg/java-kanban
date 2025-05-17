@@ -1,3 +1,5 @@
+package magaresTest;
+
 import org.junit.jupiter.api.Test;
 import tasks.Task;
 import tools.TaskStatus;

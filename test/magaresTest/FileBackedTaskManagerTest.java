@@ -1,3 +1,5 @@
+package magaresTest;
+
 import managers.FileBackedTaskManager;
 import managers.InMemoryTaskManager;
 import org.junit.jupiter.api.Test;
@@ -76,7 +78,7 @@ class FileBackedTaskManagerTest {
         final EpicTask epic = new EpicTask(1, "Epic 1", "Epic 1 info", TaskStatus.NEW,
                 Type.EPIC, Duration.ZERO, LocalDateTime.now(), LocalDateTime.now().plusHours(1), List.of(2));
         final SubTask subTask = new SubTask(2, "Subtask 1", "SubTask 1 info", TaskStatus.NEW,
-                Type.SUBTASK, Duration.ZERO, LocalDateTime.now(), 1);
+                Type.SUBTASK, Duration.ZERO, LocalDateTime.now(), epic.getTaskId());
         fileManager.saveSubTask(subTask);
         final Task task = new Task(1, "Task 1", "Task 1 info", TaskStatus.NEW, Type.TASK,
                 Duration.ZERO, LocalDateTime.now());

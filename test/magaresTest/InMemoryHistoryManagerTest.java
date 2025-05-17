@@ -1,3 +1,5 @@
+package magaresTest;
+
 import managers.InMemoryHistoryManager;
 import org.junit.jupiter.api.Test;
 import tasks.Task;
@@ -65,6 +67,7 @@ class InMemoryHistoryManagerTest {
         assertEquals(orderedHistory.get(2).getTaskId(), 3); // Третья задача — самая большая по ID
     }
 
+    //Проверка на удаление из истории по идентификатору задачи.
     @Test
     public void deletingAnTaskByIdentifier() {
 
