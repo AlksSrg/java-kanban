@@ -11,18 +11,13 @@ import java.util.List;
 public class EpicTask extends Task {
 
     private List<Integer> subTaskId = new ArrayList<>();
-    private Type type;
     private LocalDateTime endTime;
 
-    public EpicTask(int taskId, String taskName, String tasksInfo, TaskStatus status, Type type, Duration duration, LocalDateTime startTime, LocalDateTime endTime, List<Integer> subTaskId) {
+    public EpicTask(int taskId, String taskName, String tasksInfo, TaskStatus status, Type type,
+                    Duration duration, LocalDateTime startTime, LocalDateTime endTime, List<Integer> subTaskId) {
         super(taskId, taskName, tasksInfo, status, type, duration, startTime);
-        this.type = type;
         this.endTime = endTime;
         this.subTaskId = new ArrayList<>(subTaskId);
-    }
-
-    public Type getType() {
-        return type;
     }
 
     public List<Integer> getSubTaskId() {
@@ -88,4 +83,5 @@ public class EpicTask extends Task {
         }
         return sb.toString();
     }
+
 }

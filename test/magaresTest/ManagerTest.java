@@ -1,3 +1,5 @@
+package magaresTest;
+
 import managers.HistoryManager;
 import managers.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
