@@ -1,12 +1,15 @@
+package magaresTest;
+
+import exceptions.TaskTimeException;
 import managers.InMemoryTaskManager;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.EpicTask;
 import tasks.SubTask;
 import tasks.Task;
 import tools.TaskStatus;
-import tools.TaskTimeException;
 import tools.Type;
 
 import java.io.IOException;
@@ -31,10 +34,10 @@ public class InMemoryTaskManagerTest extends ManagerTest<InMemoryTaskManager> {
     // Проверяем создание задач разных типов
     @Test
     void testCreateTasks() {
-        assertNotNull(taskManager.getTaskById(testTask.getTaskId()), "Ошибка при создании простой задачи");
-        assertNotNull(taskManager.getEpicById(testEpicTask.getTaskId()), "Ошибка при создании эпика");
-        assertNotNull(taskManager.getSubTaskById(testSubTask1.getTaskId()), "Ошибка при создании подзадачи");
-        assertNotNull(taskManager.getSubTaskById(testSubTask2.getTaskId()), "Ошибка при создании подзадачи");
+        Assertions.assertNotNull(taskManager.getTaskById(testTask.getTaskId()), "Ошибка при создании простой задачи");
+        Assertions.assertNotNull(taskManager.getEpicById(testEpicTask.getTaskId()), "Ошибка при создании эпика");
+        Assertions.assertNotNull(taskManager.getSubTaskById(testSubTask1.getTaskId()), "Ошибка при создании подзадачи");
+        Assertions.assertNotNull(taskManager.getSubTaskById(testSubTask2.getTaskId()), "Ошибка при создании подзадачи");
     }
 
     //Тестируем удаление задач.
@@ -48,10 +51,10 @@ public class InMemoryTaskManagerTest extends ManagerTest<InMemoryTaskManager> {
         taskManager.deleteSubTask(testSubTask2.getTaskId());
 
         // Проверяем, что удалённых задач больше нет
-        assertNull(taskManager.getTaskById(testTask.getTaskId()), "Простая задача не была удалена");
-        assertNull(taskManager.getEpicById(testEpicTask.getTaskId()), "Эпик не был удалён");
-        assertNull(taskManager.getSubTaskById(testSubTask1.getTaskId()), "Подзадача не была удалена");
-        assertNull(taskManager.getSubTaskById(testSubTask2.getTaskId()), "Подзадача не была удалена");
+        Assertions.assertNull(taskManager.getTaskById(testTask.getTaskId()), "Простая задача не была удалена");
+        Assertions.assertNull(taskManager.getEpicById(testEpicTask.getTaskId()), "Эпик не был удалён");
+        Assertions.assertNull(taskManager.getSubTaskById(testSubTask1.getTaskId()), "Подзадача не была удалена");
+        Assertions.assertNull(taskManager.getSubTaskById(testSubTask2.getTaskId()), "Подзадача не была удалена");
     }
 
     //Тестируем обновление задач.
@@ -69,11 +72,11 @@ public class InMemoryTaskManagerTest extends ManagerTest<InMemoryTaskManager> {
         taskManager.updateSubTask(testSubTask1);
 
         // Проверяем изменения
-        assertEquals("Новая простая задача", taskManager.getTaskById(testTask.getTaskId()).getTaskName(),
+        Assertions.assertEquals("Новая простая задача", taskManager.getTaskById(testTask.getTaskId()).getTaskName(),
                 "Название простой задачи не было обновлено");
-        assertEquals("Новый эпик", taskManager.getEpicById(testEpicTask.getTaskId()).getTaskName(),
+        Assertions.assertEquals("Новый эпик", taskManager.getEpicById(testEpicTask.getTaskId()).getTaskName(),
                 "Название эпика не было обновлено");
-        assertEquals("Новое имя подзадачи", taskManager.getSubTaskById(testSubTask1.getTaskId()).getTaskName(),
+        Assertions.assertEquals("Новое имя подзадачи", taskManager.getSubTaskById(testSubTask1.getTaskId()).getTaskName(),
                 "Название подзадачи не было обновлено");
     }
 
@@ -117,7 +120,7 @@ public class InMemoryTaskManagerTest extends ManagerTest<InMemoryTaskManager> {
         // Проверяем, что подзадача вернулась
         assertFalse(subTasksForEpic.isEmpty(), "Должна вернуться одна подзадача");
         assertEquals(2, subTasksForEpic.size(), "Количество подзадач должно быть равно одному");
-        assertEquals(testSubTask1, subTasksForEpic.getFirst(), "Возвращаемая подзадача должна соответствовать сохранённой");
+        Assertions.assertEquals(testSubTask1, subTasksForEpic.getFirst(), "Возвращаемая подзадача должна соответствовать сохранённой");
     }
 
     //Тестируем очистку хранилища задач.
@@ -126,9 +129,9 @@ public class InMemoryTaskManagerTest extends ManagerTest<InMemoryTaskManager> {
         taskManager.clearData();
 
         // Проверяем, что хранилище пустое
-        assertTrue(taskManager.getAllTasks().isEmpty());
-        assertTrue(taskManager.getAllEpics().isEmpty());
-        assertTrue(taskManager.getAllSubTasks().isEmpty());
+        Assertions.assertTrue(taskManager.getAllTasks().isEmpty());
+        Assertions.assertTrue(taskManager.getAllEpics().isEmpty());
+        Assertions.assertTrue(taskManager.getAllSubTasks().isEmpty());
     }
 
     //Проверка на добавление пересекающихся по времени задач
@@ -136,7 +139,7 @@ public class InMemoryTaskManagerTest extends ManagerTest<InMemoryTaskManager> {
     void testAddTaskToSortedList() throws Exception {
 
         // Штатные задачи из TaskManagerTest добавляются, кроме Epic
-        assertEquals(3, taskManager.getPrioritizedTasks().size(), "Три задачи должны быть добавлены");
+        Assertions.assertEquals(3, taskManager.getPrioritizedTasks().size(), "Три задачи должны быть добавлены");
 
         // Попытка добавить пересекающуюся задачу должна привести к ошибке
         // Задача частично пересекается с первой задачей
@@ -167,7 +170,7 @@ public class InMemoryTaskManagerTest extends ManagerTest<InMemoryTaskManager> {
         taskManager.addTaskToSortedList(nonOverlappingTask);
 
         // Проверяем, что задача добавилась нормально
-        assertEquals(4, taskManager.getPrioritizedTasks().size(), "Всего должно быть 4 задачи");
+        Assertions.assertEquals(4, taskManager.getPrioritizedTasks().size(), "Всего должно быть 4 задачи");
     }
 
     //Тестируем получение приоритизированного списка задач.
@@ -187,7 +190,7 @@ public class InMemoryTaskManagerTest extends ManagerTest<InMemoryTaskManager> {
         taskManager.updateSubTask(testSubTask2);
 
         //Статус эпика должен стать IN_PROGRESS
-        assertEquals(TaskStatus.DONE, taskManager.getEpicById(testEpicTask.getTaskId()).getStatus(),
+        Assertions.assertEquals(TaskStatus.DONE, taskManager.getEpicById(testEpicTask.getTaskId()).getStatus(),
                 "Статус эпика должен быть DONE при выполнении подзадачи");
     }
 
@@ -209,7 +212,7 @@ public class InMemoryTaskManagerTest extends ManagerTest<InMemoryTaskManager> {
     void testEpicStatusUpdateScenarios() {
 
         // Случай: Все подзадачи NEW - создаются из TaskManagerTest со статусом NEW
-        assertEquals(TaskStatus.NEW, testEpicTask.getStatus(), "Эпик должен быть NEW, если все подзадачи NEW");
+        Assertions.assertEquals(TaskStatus.NEW, testEpicTask.getStatus(), "Эпик должен быть NEW, если все подзадачи NEW");
 
         // Случай: Все подзадачи DONE
         testSubTask1.setStatus(TaskStatus.DONE);
@@ -217,7 +220,7 @@ public class InMemoryTaskManagerTest extends ManagerTest<InMemoryTaskManager> {
         taskManager.updateSubTask(testSubTask1);
         taskManager.updateSubTask(testSubTask2);
 
-        assertEquals(TaskStatus.DONE, testEpicTask.getStatus(), "Эпик должен быть DONE, если все подзадачи DONE");
+        Assertions.assertEquals(TaskStatus.DONE, testEpicTask.getStatus(), "Эпик должен быть DONE, если все подзадачи DONE");
 
         // Случай: Смесь NEW и DONE -
         testSubTask1.setStatus(TaskStatus.DONE);
@@ -225,7 +228,7 @@ public class InMemoryTaskManagerTest extends ManagerTest<InMemoryTaskManager> {
         taskManager.updateSubTask(testSubTask1);
         taskManager.updateSubTask(testSubTask2);
 
-        assertEquals(TaskStatus.IN_PROGRESS, testEpicTask.getStatus(), "Эпик должен быть IN_PROGRESS, если есть подзадачи NEW и DONE");
+        Assertions.assertEquals(TaskStatus.IN_PROGRESS, testEpicTask.getStatus(), "Эпик должен быть IN_PROGRESS, если есть подзадачи NEW и DONE");
 
         // Случай: Одна из подзадач IN_PROGRESS
         testSubTask1.setStatus(TaskStatus.IN_PROGRESS);
@@ -233,7 +236,7 @@ public class InMemoryTaskManagerTest extends ManagerTest<InMemoryTaskManager> {
         taskManager.updateSubTask(testSubTask1);
         taskManager.updateSubTask(testSubTask2);
 
-        assertEquals(TaskStatus.IN_PROGRESS, testEpicTask.getStatus(), "Эпос должен быть IN_PROGRESS, если есть подзадача IN_PROGRESS");
+        Assertions.assertEquals(TaskStatus.IN_PROGRESS, testEpicTask.getStatus(), "Эпос должен быть IN_PROGRESS, если есть подзадача IN_PROGRESS");
     }
 
     //Завершаем тестирование, очищая среду.

@@ -9,17 +9,11 @@ import java.time.LocalDateTime;
 public class SubTask extends Task {
 
     private int epicTaskId;
-    private Type type;
 
 
     public SubTask(int taskId, String taskName, String tasksInfo, TaskStatus status, Type type, Duration duration, LocalDateTime startTime, int epicTaskId) {
         super(taskId, taskName, tasksInfo, status, type, duration, startTime);
-        this.type = type;
         this.epicTaskId = epicTaskId;
-    }
-
-    public Type getType() {
-        return type;
     }
 
     public int getEpicTaskId() {
